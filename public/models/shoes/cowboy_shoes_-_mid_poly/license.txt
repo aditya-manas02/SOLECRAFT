@@ -1,0 +1,8 @@
+Model Information:
+* title:	Cowboy Shoes - Mid Poly
+* source:	https://sketchfab.com/3d-models/cowboy-shoes-mid-poly-9424d591a1324a18945eae010c0bd169
+* author:	Allay Design (https://sketchfab.com/Alister.Dsa)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

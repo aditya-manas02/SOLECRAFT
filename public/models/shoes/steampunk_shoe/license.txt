@@ -1,0 +1,11 @@
+Model Information:
+* title:	Steampunk Shoe
+* source:	https://sketchfab.com/3d-models/steampunk-shoe-f774e541e8e741a1a601fcb1f7974b4e
+* author:	mrford3rd (https://sketchfab.com/mrford3rd)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Steampunk Shoe" (https://sketchfab.com/3d-models/steampunk-shoe-f774e541e8e741a1a601fcb1f7974b4e) by mrford3rd (https://sketchfab.com/mrford3rd) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

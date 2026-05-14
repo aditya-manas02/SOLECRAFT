@@ -1,0 +1,11 @@
+Model Information:
+* title:	Combat Ankle Boot - bota
+* source:	https://sketchfab.com/3d-models/combat-ankle-boot-bota-c0bea59d959b449cb875295ddef18fb7
+* author:	vmmaniac (https://sketchfab.com/vmmaniac)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Combat Ankle Boot - bota" (https://sketchfab.com/3d-models/combat-ankle-boot-bota-c0bea59d959b449cb875295ddef18fb7) by vmmaniac (https://sketchfab.com/vmmaniac) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

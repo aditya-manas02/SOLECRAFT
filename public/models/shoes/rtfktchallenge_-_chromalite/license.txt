@@ -1,0 +1,11 @@
+Model Information:
+* title:	RTFKTCHALLENGE - Chromalite
+* source:	https://sketchfab.com/3d-models/rtfktchallenge-chromalite-dfff54f76d154a4ca1a0cade572cd9e6
+* author:	Josh Neelands (https://sketchfab.com/neelands)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "RTFKTCHALLENGE - Chromalite" (https://sketchfab.com/3d-models/rtfktchallenge-chromalite-dfff54f76d154a4ca1a0cade572cd9e6) by Josh Neelands (https://sketchfab.com/neelands) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

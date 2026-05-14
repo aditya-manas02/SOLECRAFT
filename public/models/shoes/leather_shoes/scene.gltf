@@ -1,0 +1,428 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 16644,
+      "max": [
+        1.0537619590759277,
+        0.7233890295028687,
+        1.2871060371398926
+      ],
+      "min": [
+        -1.4238109588623047,
+        -0.1768759936094284,
+        -0.00027200000477023423
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 199728,
+      "componentType": 5126,
+      "count": 16644,
+      "max": [
+        0.9992943406105042,
+        0.9999605417251587,
+        0.9999904036521912
+      ],
+      "min": [
+        -0.9990937113761902,
+        -0.9999953508377075,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 16644,
+      "max": [
+        0.9999290704727173,
+        0.9996671080589294,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.9999812841415405,
+        -0.9999963045120239,
+        -0.9999780058860779,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 16644,
+      "max": [
+        0.9958000183105469,
+        0.9909999966621399
+      ],
+      "min": [
+        0.00419999985024333,
+        0.00419999985024333
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 59046,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 399456,
+      "componentType": 5126,
+      "count": 16996,
+      "max": [
+        1.0537619590759277,
+        -0.7914314866065979,
+        1.2871060371398926
+      ],
+      "min": [
+        -1.4238109588623047,
+        -1.6916965246200562,
+        -0.00027200000477023423
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 603408,
+      "componentType": 5126,
+      "count": 16996,
+      "max": [
+        0.9992943406105042,
+        0.9999954104423523,
+        0.9999904036521912
+      ],
+      "min": [
+        -0.9990937113761902,
+        -0.9999605417251587,
+        -1.0
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 266304,
+      "componentType": 5126,
+      "count": 16996,
+      "max": [
+        0.9999291300773621,
+        0.9999963045120239,
+        1.0,
+        -1.0
+      ],
+      "min": [
+        -0.9999813437461853,
+        -0.9996671080589294,
+        -0.9999780058860779,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 133152,
+      "componentType": 5126,
+      "count": 16996,
+      "max": [
+        0.9958000183105469,
+        0.9909999966621399
+      ],
+      "min": [
+        0.00419999985024333,
+        0.00419999985024333
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 236184,
+      "componentType": 5125,
+      "count": 59046,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Superior (https://sketchfab.com/SuperiorOne)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/leather-shoes-626759e64b7542b9a852d67e743715c8",
+      "title": "Leather Shoes"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 472368,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 269120,
+      "byteOffset": 472368,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 807360,
+      "byteOffset": 741488,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 538240,
+      "byteOffset": 1548848,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2087088,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/02_-_Default_baseColor.png"
+    },
+    {
+      "uri": "textures/02_-_Default_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/02_-_Default_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "02_-_Default",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "default_right_llow_02 - Default_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "default_left_low_02 - Default_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "leather_shoes.FBX"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        0.9650314627577703,
+        -5.551115123125783e-17,
+        0.2621340799812152,
+        0.0,
+        0.2621340799812152,
+        2.220446049250313e-16,
+        -0.9650314627577704,
+        0.0,
+        -5.551115123125783e-17,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "default_right_llow"
+    },
+    {
+      "mesh": 0,
+      "name": "default_right_llow_02 - Default_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        0.5178459795887969,
+        -0.022545456508180357,
+        -0.8551767325030291,
+        0.0,
+        0.05577201595680765,
+        0.9984157304773735,
+        0.007450595375280224,
+        0.0,
+        0.8536539249952717,
+        -0.0515531912316813,
+        0.5182829775460474,
+        0.0,
+        1.4884617328643799,
+        0.44007349014282227,
+        1.9628808498382568,
+        1.0
+      ],
+      "name": "default_left_low"
+    },
+    {
+      "children": [
+        7
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        -0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.18502449989318848,
+        1.2415640354156494,
+        -0.6434170007705688,
+        1.0
+      ],
+      "name": "Object_6"
+    },
+    {
+      "mesh": 1,
+      "name": "default_left_low_02 - Default_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

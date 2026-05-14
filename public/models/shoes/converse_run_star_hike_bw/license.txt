@@ -1,0 +1,11 @@
+Model Information:
+* title:	Converse Run Star Hike B&W
+* source:	https://sketchfab.com/3d-models/converse-run-star-hike-bw-58e29c95b3e240af92b53c7ecf6f5e23
+* author:	EvaDankovska (https://sketchfab.com/EvaDankovska)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Converse Run Star Hike B&W" (https://sketchfab.com/3d-models/converse-run-star-hike-bw-58e29c95b3e240af92b53c7ecf6f5e23) by EvaDankovska (https://sketchfab.com/EvaDankovska) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
