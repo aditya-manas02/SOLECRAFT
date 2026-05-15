@@ -179,7 +179,7 @@ export function ShoeModel({ modelPath }) {
         // Removing the texture forces our pure UI color to show up while preserving normal/bump maps.
         mat.map = null;
         mat.emissiveMap = null;
-        mat.emissive.setHex(0x000000);
+        if (mat.emissive) mat.emissive.setHex(0x000000);
 
         mat.roughness = matProps.roughness;
         mat.metalness = matProps.metalness;
