@@ -7,6 +7,7 @@ import axios from 'axios';
 import Navbar from './components/layout/Navbar';
 import ToastContainer from './components/ui/ToastContainer';
 import LoadingScreen from './components/ui/LoadingScreen';
+import Watermark from './components/ui/Watermark';
 
 // Lazy-load pages for performance
 const Home = lazy(() => import('./Pages/Home'));
@@ -45,6 +46,7 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <ToastContainer />
+      <Watermark />
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
           <Route path="/" element={<Home />} />
