@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 /**
- * A more eye-catchy watermark component with a typing animation and accent styling.
+ * A watermark where 'Developer —' is static and the name has a typing animation.
  */
 export default function Watermark() {
-  const text = "Developer — Aditya Manas";
+  const staticText = "Developer — ";
+  const animatedText = "Aditya Manas";
   const [displayText, setDisplayText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [speed, setSpeed] = useState(150);
@@ -12,13 +13,13 @@ export default function Watermark() {
   useEffect(() => {
     const handleTyping = () => {
       if (!isDeleting) {
-        setDisplayText(text.substring(0, displayText.length + 1));
+        setDisplayText(animatedText.substring(0, displayText.length + 1));
         setSpeed(150);
-        if (displayText === text) {
+        if (displayText === animatedText) {
           setTimeout(() => setIsDeleting(true), 4000); // Pause longer at the end
         }
       } else {
-        setDisplayText(text.substring(0, displayText.length - 1));
+        setDisplayText(animatedText.substring(0, displayText.length - 1));
         setSpeed(100);
         if (displayText === '') {
           setIsDeleting(false);
@@ -45,7 +46,8 @@ export default function Watermark() {
             color: 'var(--color-text)',
           }}
         >
-          {displayText}
+          {staticText}
+          <span className="text-[var(--color-accent)]">{displayText}</span>
         </span>
         <span className="w-[1.5px] h-[12px] bg-[var(--color-accent)] ml-1 animate-pulse" />
       </div>
