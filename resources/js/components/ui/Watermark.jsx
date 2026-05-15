@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 /**
- * A subtle watermark component with a typing animation.
- * Visible in both light and dark modes.
+ * A more eye-catchy watermark component with a typing animation and accent styling.
  */
 export default function Watermark() {
   const text = "Developer — Aditya Manas";
@@ -16,7 +15,7 @@ export default function Watermark() {
         setDisplayText(text.substring(0, displayText.length + 1));
         setSpeed(150);
         if (displayText === text) {
-          setTimeout(() => setIsDeleting(true), 3000); // Pause at end
+          setTimeout(() => setIsDeleting(true), 4000); // Pause longer at the end
         }
       } else {
         setDisplayText(text.substring(0, displayText.length - 1));
@@ -33,19 +32,23 @@ export default function Watermark() {
 
   return (
     <div 
-      className="fixed bottom-4 left-4 z-[9999] pointer-events-none select-none flex items-center"
-      style={{
-        fontFamily: 'var(--font-mono)',
-        fontSize: '10px',
-        letterSpacing: '0.05em',
-        textTransform: 'uppercase',
-        color: 'var(--color-text)',
-        opacity: 0.4, // Increased opacity for better visibility
-        textShadow: '0 1px 2px rgba(0,0,0,0.1)', // Subtle shadow for light mode
-      }}
+      className="fixed bottom-6 left-6 z-[9999] pointer-events-auto select-none flex items-center group cursor-default"
     >
-      <span>{displayText}</span>
-      <span className="w-[2px] h-[12px] bg-current ml-1 animate-pulse" />
+      <div className="flex items-center px-3 py-1.5 rounded-full border border-white/10 dark:border-white/5 bg-white/40 dark:bg-black/20 backdrop-blur-md shadow-lg shadow-black/5 opacity-60 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-105">
+        <div className="w-2 h-2 rounded-full bg-[var(--color-accent)] mr-2 animate-pulse" />
+        <span 
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            fontWeight: '600',
+            letterSpacing: '0.02em',
+            color: 'var(--color-text)',
+          }}
+        >
+          {displayText}
+        </span>
+        <span className="w-[1.5px] h-[12px] bg-[var(--color-accent)] ml-1 animate-pulse" />
+      </div>
     </div>
   );
 }
