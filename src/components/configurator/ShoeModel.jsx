@@ -174,11 +174,9 @@ export function ShoeModel({ modelPath }) {
         const mat = materialsRef.current[matKey];
         mat.color.set(new THREE.Color(color));
         
-        // CRITICAL FIX: Strip original baked diffuse textures.
-        // If the original shoe was black, multiplying it by Green still results in Black.
-        // Removing the texture forces our pure UI color to show up while preserving normal/bump maps.
         mat.map = null;
         mat.emissiveMap = null;
+        mat.vertexColors = false; // Bypass baked vertex colors to support direct UI customizer coloring
         if (mat.emissive) mat.emissive.setHex(0x000000);
 
         mat.roughness = matProps.roughness;
