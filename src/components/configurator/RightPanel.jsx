@@ -52,10 +52,20 @@ export default function RightPanel({ activeStep, setActiveStep }) {
         return meshColors;
     };
 
+    const [activeSubZone, setActiveSubZone] = React.useState("all"); // all | toe | tongue | heel
+
     const handleUpperColor = (hex) => {
-        setZoneColor("Toe", hex);
-        setZoneColor("Tongue", hex);
-        setZoneColor("Heel", hex);
+        if (activeSubZone === "all") {
+            setZoneColor("Toe", hex);
+            setZoneColor("Tongue", hex);
+            setZoneColor("Heel", hex);
+        } else if (activeSubZone === "toe") {
+            setZoneColor("Toe", hex);
+        } else if (activeSubZone === "tongue") {
+            setZoneColor("Tongue", hex);
+        } else if (activeSubZone === "heel") {
+            setZoneColor("Heel", hex);
+        }
     };
 
     // Descriptions
@@ -111,24 +121,59 @@ export default function RightPanel({ activeStep, setActiveStep }) {
                         </div>
 
                         <div>
-                            <span className="text-[10px] tracking-[0.2em] font-bold text-[#888] block mb-4 uppercase">Color Selector</span>
-                            <div className="flex gap-4 items-center">
-                                {getColorsForMaterial().map(c => (
+                            <span className="text-[10px] tracking-[0.2em] font-bold text-[#888] block mb-3 uppercase">Customize Zone</span>
+                            <div className="flex flex-wrap gap-1.5 mb-4 border-b border-[#E8E6DF] pb-3">
+                                {[
+                                    { id: 'all', label: 'All Upper' },
+                                    { id: 'toe', label: 'Toe' },
+                                    { id: 'tongue', label: 'Tongue' },
+                                    { id: 'heel', label: 'Heel' }
+                                ].map(z => (
                                     <button
-                                        key={c.name}
-                                        onClick={() => handleUpperColor(c.hex)}
-                                        className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center cursor-pointer ${
-                                            activeColor === c.hex 
-                                                ? 'border-[#111] scale-110 shadow-md' 
-                                                : 'border-transparent hover:scale-105'
+                                        key={z.id}
+                                        onClick={() => setActiveSubZone(z.id)}
+                                        className={`px-3 py-1.5 text-[8px] tracking-widest uppercase font-bold border rounded transition-all cursor-pointer ${
+                                            activeSubZone === z.id
+                                                ? 'bg-black text-white border-black'
+                                                : 'bg-white border-[#E0DED7] text-[#888] hover:border-[#aaa]'
                                         }`}
-                                        style={{ backgroundColor: c.hex }}
-                                        title={c.name}
-                                    />
+                                    >
+                                        {z.label}
+                                    </button>
                                 ))}
                             </div>
+
+                            <span className="text-[10px] tracking-[0.2em] font-bold text-[#888] block mb-4 uppercase">Color Selector</span>
+                            <div className="flex gap-4 items-center">
+                                {getColorsForMaterial().map(c => {
+                                    const isSelected = 
+                                        activeSubZone === 'all' ? (colorZones.Toe === c.hex && colorZones.Tongue === c.hex && colorZones.Heel === c.hex) :
+                                        activeSubZone === 'toe' ? (colorZones.Toe === c.hex) :
+                                        activeSubZone === 'tongue' ? (colorZones.Tongue === c.hex) :
+                                        (colorZones.Heel === c.hex);
+
+                                    return (
+                                        <button
+                                            key={c.name}
+                                            onClick={() => handleUpperColor(c.hex)}
+                                            className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center cursor-pointer ${
+                                                isSelected 
+                                                    ? 'border-[#111] scale-110 shadow-md' 
+                                                    : 'border-transparent hover:scale-105'
+                                            }`}
+                                            style={{ backgroundColor: c.hex }}
+                                            title={c.name}
+                                        />
+                                    );
+                                })}
+                            </div>
                             <span className="text-[10px] text-[#666] tracking-wider block mt-3 uppercase">
-                                Active: {getColorsForMaterial().find(c => c.hex === activeColor)?.name || "Custom Color"}
+                                Active: {
+                                    activeSubZone === 'all' ? (colorZones.Toe === colorZones.Tongue && colorZones.Toe === colorZones.Heel ? (getColorsForMaterial().find(c => c.hex === colorZones.Toe)?.name || "Mixed") : "Mixed") :
+                                    activeSubZone === 'toe' ? (getColorsForMaterial().find(c => c.hex === colorZones.Toe)?.name || "Custom") :
+                                    activeSubZone === 'tongue' ? (getColorsForMaterial().find(c => c.hex === colorZones.Tongue)?.name || "Custom") :
+                                    (getColorsForMaterial().find(c => c.hex === colorZones.Heel)?.name || "Custom")
+                                }
                             </span>
                         </div>
 

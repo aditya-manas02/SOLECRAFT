@@ -5,6 +5,20 @@ export function seed() {
   console.log('Seeding SQLite database...');
 
   try {
+    // Truncate tables to reset auto-increment IDs to 1
+    db.exec(`
+      DELETE FROM order_items;
+      DELETE FROM payments;
+      DELETE FROM order_updates;
+      DELETE FROM orders;
+      DELETE FROM shoe_designs;
+      DELETE FROM sessions;
+      DELETE FROM sneaker_parts;
+      DELETE FROM shoes;
+      DELETE FROM users;
+      DELETE FROM sqlite_sequence;
+    `);
+
     // ── Create Demo Users ──
     const insertUser = db.prepare(`
       INSERT OR IGNORE INTO users (name, email, password, role)
@@ -22,19 +36,20 @@ export function seed() {
 
     // ── Create Shoes ──
     const insertShoe = db.prepare(`
-      INSERT OR IGNORE INTO shoes (name, slug, base_price, model_file, thumbnail, available_materials, available_soles, is_active)
+      INSERT OR REPLACE INTO shoes (name, slug, base_price, model_file, thumbnail, available_materials, available_soles, is_active)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const materials = [
       { id: 'leather', label: 'Full-Grain Leather', price: 0 },
       { id: 'suede', label: 'Premium Suede', price: 15 },
-      { id: 'patent', label: 'Patent Leather', price: 25 }
+      { id: 'mesh', label: 'Technical Mesh', price: 25 }
     ];
 
     const soles = [
-      { id: 'flat', label: 'Flat Sole', price: 0 },
-      { id: 'chunky', label: 'Chunky Sole', price: 20 }
+      { id: 'flat', label: 'Classic Flat', price: 0 },
+      { id: 'platform', label: 'Elevated Platform', price: 15 },
+      { id: 'trail', label: 'Rugged Trail', price: 25 }
     ];
 
     const materialsJson = JSON.stringify(materials);
@@ -85,7 +100,7 @@ export function seed() {
 
     // ── Seed Sneaker Parts ──
     const insertPart = db.prepare(`
-      INSERT OR IGNORE INTO sneaker_parts (part_name, part_type, material, price_modifier)
+      INSERT OR REPLACE INTO sneaker_parts (part_name, part_type, material, price_modifier)
       VALUES (?, ?, ?, ?)
     `);
 

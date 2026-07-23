@@ -46,6 +46,20 @@ export const useConfiguratorStore = create((set, get) => ({
   setLoading: (bool) => set({ isLoading: bool }),
   setError: (err) => set({ error: err }),
   
+  setInitialConfig: (config) => {
+    set({
+      ...config,
+      history: [{
+        selectedMaterial: config.selectedMaterial || 'leather',
+        selectedSole: config.selectedSole || 'flat',
+        colorZones: { ...config.colorZones },
+        selectedTemplate: config.selectedTemplate || null,
+        accessories: { ...(config.accessories || defaultConfig.accessories) },
+      }],
+      historyIndex: 0
+    });
+  },
+  
   // ── Push state to history for undo/redo ──
   _pushHistory: () => {
     const s = get()

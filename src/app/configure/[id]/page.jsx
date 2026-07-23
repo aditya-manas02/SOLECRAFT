@@ -66,12 +66,13 @@ export default function Show() {
         axios.get(`/api/shoes/${id}`)
             .then(res => { 
                 setShoe(res.data.data); 
-                calculateTotal();
-                // Apply default off-white preset initially
-                setMaterial("leather");
-                Object.entries(presets[0].colors).forEach(([zone, color]) => {
-                    setZoneColor(zone, color);
+                // Initialize configuration cleanly without polluting undo history
+                const { setInitialConfig } = useConfiguratorStore.getState();
+                setInitialConfig({
+                    selectedMaterial: "leather",
+                    colorZones: presets[0].colors
                 });
+                calculateTotal();
             })
             .catch(err => { setError('Failed to load shoe model.'); addToast('Failed to load', 'error'); })
             .finally(() => setLoading(false));
