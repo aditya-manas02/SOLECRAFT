@@ -114,14 +114,24 @@ export function ShoeModel({ modelPath }) {
       const applyColorToMaterial = (originalMat, arrayIndex = null) => {
         if (!originalMat) return originalMat;
 
-        let assignedZone = explicitZone;
+        let assignedZone = null;
         
-        // If mesh name gave nothing, try the material name!
-        if (!assignedZone && originalMat.name) {
+        // 1. Try material name keywords FIRST (most specific for sub-materials inside a mesh)
+        if (originalMat.name) {
             assignedZone = checkKeywords(originalMat.name);
         }
         
-        // SKINNED MESH FALLBACK:
+        // 2. Try mesh name keywords SECOND
+        if (!assignedZone) {
+            assignedZone = explicitZone;
+        }
+        
+        // 3. Fallback for material arrays on a single consolidated mesh (distribute them sequentially)
+        if (!assignedZone && arrayIndex !== null && Array.isArray(child.material)) {
+            assignedZone = zoneKeys[arrayIndex % zoneKeys.length];
+        }
+        
+        // 4. SKINNED MESH FALLBACK:
         // SkinnedMeshes have invalid Box3 geometry at rest. We must use sequential grouping by material UUID.
         if (!assignedZone && child.isSkinnedMesh) {
           if (assignedMaterials.current[originalMat.uuid]) {
@@ -133,7 +143,7 @@ export function ShoeModel({ modelPath }) {
           }
         }
         
-        // ADVANCED SPATIAL HEURISTIC MAPPING FOR REGULAR MESHES:
+        // 5. ADVANCED SPATIAL HEURISTIC MAPPING FOR REGULAR MESHES:
         // Breaks apart meshes that share a single material based on their physical location.
         if (!assignedZone && !child.isSkinnedMesh) {
             const meshBox = new THREE.Box3().setFromObject(child);
