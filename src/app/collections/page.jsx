@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense, useRef, Component } from 'react';
 import Link from 'next/link';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, useGLTF } from '@react-three/drei';
+import { Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { PlaceholderShoe } from '@/components/configurator/PlaceholderShoe';
 import { ShoeModel } from '@/components/configurator/ShoeModel';
@@ -33,13 +33,13 @@ function ShoePreview({ shoe, isHovered }) {
         const t = state.clock.getElapsedTime();
         
         if (isHovered) {
-            groupRef.current.position.y = Math.sin(t * 1.5) * 0.05;
-            groupRef.current.rotation.y += 0.02;
-            groupRef.current.scale.lerp(new THREE.Vector3(1.1, 1.1, 1.1), 0.1);
+            groupRef.current.position.y = -0.25 + Math.sin(t * 1.5) * 0.03;
+            groupRef.current.rotation.y += 0.012;
+            groupRef.current.scale.lerp(new THREE.Vector3(0.9, 0.9, 0.9), 0.1);
         } else {
             groupRef.current.rotation.y = 0.5;
-            groupRef.current.scale.lerp(new THREE.Vector3(0.9, 0.9, 0.9), 0.1);
-            groupRef.current.position.y = 0;
+            groupRef.current.scale.lerp(new THREE.Vector3(0.78, 0.78, 0.78), 0.1);
+            groupRef.current.position.y = -0.25;
         }
     });
 
@@ -57,61 +57,54 @@ function ShoePreview({ shoe, isHovered }) {
 }
 
 // ─── OPTIMIZED CARD PREVIEW COMPONENT ───
-function ShoeCardPreview({ shoe, i }) {
-    // Detect when the card enters the viewport
+function ShoeCardPreview({ shoe, isHovered }) {
     const { ref, inView } = useInView({
         threshold: 0.01,
         rootMargin: '200px',
         triggerOnce: false,
     });
-    const [hovered, setHovered] = useState(false);
     
     return (
         <div 
             ref={ref}
-            className="relative h-[400px] bg-black overflow-hidden flex items-center justify-center"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            className="relative h-[280px] bg-[#F5F3EF] border-b border-[#E8E6DF] overflow-hidden flex items-center justify-center transition-colors duration-300"
         >
-            <div className="absolute inset-0 bg-gradient-to-b from-[#111] to-[#000]" />
+            {/* Soft background lighting vignette */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.75)_0%,rgba(238,236,230,0.45)_100%)]" />
             
             {/* 
-              PERFORMANCE & DUAL-SUSPENSE OPTIMIZATION:
-              - The 3D Canvas mounts immediately as soon as it enters the viewport.
-              - While the large custom model file is downloading over the network, Suspense
-                renders <PlaceholderShoe clay={true} /> instantly (it's preloaded, tiny, and cached).
-              - The user immediately sees a beautiful, clean white "clay model" silhouette.
-              - The custom shoe model swaps in smoothly as soon as it finishes downloading.
+              PERFORMANCE & FRAMING OPTIMIZATION:
+              - Adjusted camera position [3, 0.6, 3.8] and fov: 42 to ensure models are perfectly centered.
+              - Reset group Y-position to -0.25 and scale to 0.78 to prevent model clipping at the top.
             */}
             {inView ? (
                 <div className="absolute inset-0 z-10 pointer-events-none">
                     <Canvas 
                         shadows={false}
                         dpr={1}
-                        camera={{ position: [3, 1.5, 4], fov: 35 }}
-                        frameloop={hovered ? 'always' : 'demand'}
+                        camera={{ position: [3, 0.6, 3.8], fov: 42 }}
+                        frameloop={isHovered ? 'always' : 'demand'}
                     >
-                        <Suspense fallback={<PlaceholderShoe clay={true} scale={[0.9, 0.9, 0.9]} position={[0, -0.2, 0]} rotation={[0, 0.5, 0]} />}>
+                        <Suspense fallback={<PlaceholderShoe clay={true} scale={[0.78, 0.78, 0.78]} position={[0, -0.25, 0]} rotation={[0, 0.5, 0]} />}>
                             <ambientLight intensity={1.5} />
-                            <pointLight position={[5, 5, 5]} intensity={2} color="#E85D26" />
-                            <pointLight position={[-5, -5, -5]} intensity={1} color="#fff" />
+                            <pointLight position={[5, 5, 5]} intensity={1.5} color="#E85D26" />
+                            <pointLight position={[-5, -5, -5]} intensity={0.8} color="#fff" />
                             
-                            <ShoePreview shoe={shoe} isHovered={hovered} />
+                            <ShoePreview shoe={shoe} isHovered={isHovered} />
                             
                             <Environment preset="city" />
                         </Suspense>
                     </Canvas>
                 </div>
             ) : (
-                <div className="text-[160px] font-black italic opacity-[0.03] select-none text-white transition-opacity duration-300">
-                    {String(i + 1).padStart(2, '0')}
-                </div>
+                <div className="w-10 h-10 border-2 border-t-[#E85D26] rounded-full animate-spin" style={{ borderColor: '#E5E5E5', borderTopColor: '#E85D26' }} />
             )}
 
-            <div className="absolute bottom-10 left-10 flex items-center gap-4 z-20">
-                <div className="w-12 h-[1px] bg-[#E85D26]/40" />
-                <span className="text-[8px] tracking-[0.5em] text-[#E85D26] uppercase font-bold opacity-40 group-hover:opacity-100 transition-opacity">
-                    {hovered ? 'Neural Link Active' : 'Model Standby'}
+            {/* Glowing active state indicators */}
+            <div className="absolute bottom-5 left-6 flex items-center gap-2 z-20">
+                <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isHovered ? 'bg-[#E85D26] scale-125' : 'bg-[#CFCDBD]'}`} />
+                <span className="text-[7px] tracking-[0.3em] text-[#888] uppercase font-bold">
+                    {isHovered ? 'Interactive 3D' : 'Standby'}
                 </span>
             </div>
         </div>
@@ -120,18 +113,13 @@ function ShoeCardPreview({ shoe, i }) {
 
 export default function Collections() {
     const [shoes, setShoes] = useState([]);
+    const [filteredShoes, setFilteredShoes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [hoveredId, setHoveredId] = useState(null);
-    const [tilt, setTilt] = useState({ x: 0, y: 0 });
-    const darkMode = useThemeStore(s => s.darkMode);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [activeMaterialFilter, setActiveMaterialFilter] = useState("all"); // all | leather | suede
 
-    const handleMouseMove = (e, id) => {
-        if (hoveredId !== id) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        setTilt({ x: x * 10, y: y * -10 });
-    };
+    const darkMode = useThemeStore(s => s.darkMode);
 
     useEffect(() => {
         axios.get('/api/shoes')
@@ -143,81 +131,177 @@ export default function Collections() {
                     return s;
                 });
                 setShoes(cleanedShoes); 
+                setFilteredShoes(cleanedShoes);
                 setLoading(false); 
             })
             .catch(() => setLoading(false));
     }, []);
 
-    const cardBg = darkMode ? 'bg-[#0A0A0A] border-[#1A1A1A]' : 'bg-white border-[#E5E5E5]';
+    // Filter logic
+    useEffect(() => {
+        let result = shoes;
+
+        // Search query filter
+        if (searchQuery.trim()) {
+            result = result.filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()) || s.slug.toLowerCase().includes(searchQuery.toLowerCase()));
+        }
+
+        // Material filter
+        if (activeMaterialFilter !== "all") {
+            result = result.filter(s => {
+                const mats = s.available_materials ? (typeof s.available_materials === 'string' ? JSON.parse(s.available_materials) : s.available_materials) : [];
+                return mats.some(m => m.id === activeMaterialFilter);
+            });
+        }
+
+        setFilteredShoes(result);
+    }, [searchQuery, activeMaterialFilter, shoes]);
 
     return (
-        <div className="min-h-screen font-mono relative animate-fade-in" style={{ backgroundColor: 'var(--color-bg)' }}>
+        <div className="min-h-screen font-mono relative bg-[#FAF9F6] text-[#111] animate-fade-in">
             
             {/* ─── PAGE HEADER ─── */}
-            <section className="relative py-32 px-8 bg-[#0D0D0D] overflow-hidden border-b border-white/5">
-                <div className="absolute inset-0 opacity-[0.05]" style={{
-                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-                    backgroundSize: '60px 60px',
-                }} />
-                <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="text-[10px] tracking-[0.6em] text-[#E85D26] mb-4 uppercase font-bold">Catalog Archive</div>
-                    <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tighter mb-6 uppercase">
-                        Sole<span className="text-[#E85D26]">Craft</span> Grid
-                    </h1>
+            <section className="relative py-20 px-8 border-b border-[#E8E6DF] bg-[#F5F3EF]">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                    <div>
+                        <div className="text-[10px] tracking-[0.5em] text-[#888] mb-3 uppercase font-bold">Catalog Showcase</div>
+                        <h1 className="text-4xl md:text-5xl font-black text-[#111] tracking-tight uppercase">
+                            SELECT PROTOTYPE
+                        </h1>
+                        <p className="text-[11px] text-[#666] tracking-wider mt-2 max-w-md">
+                            Browse our curated collection of signature 3D templates and start customizing your personalized sneaker.
+                        </p>
+                    </div>
+
+                    {/* Quick Stats */}
+                    <div className="flex gap-8 border-l border-[#E8E6DF] pl-8 py-2 text-[10px] tracking-widest uppercase text-[#888]">
+                        <div><span className="block font-black text-lg text-[#111] font-mono leading-none mb-1">{shoes.length}</span> Prototypes</div>
+                        <div><span className="block font-black text-lg text-[#111] font-mono leading-none mb-1">3</span> Materials</div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ─── FILTER & SEARCH CONTROLS ─── */}
+            <section className="py-6 px-8 border-b border-[#E8E6DF] bg-[#F5F3EF]/60 backdrop-blur-md sticky top-16 z-30">
+                <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 justify-between items-center">
+                    
+                    {/* Material Filter Pills */}
+                    <div className="flex gap-2">
+                        {[
+                            { id: 'all', label: 'All Models' },
+                            { id: 'leather', label: 'Leather' },
+                            { id: 'suede', label: 'Suede' }
+                        ].map(f => (
+                            <button
+                                key={f.id}
+                                onClick={() => setActiveMaterialFilter(f.id)}
+                                className={`px-5 py-2 text-[9px] tracking-[0.2em] uppercase font-bold border rounded-full transition-all cursor-pointer ${
+                                    activeMaterialFilter === f.id
+                                        ? 'bg-black text-white border-black shadow-sm'
+                                        : 'bg-white border-[#E8E6DF] text-[#888] hover:border-[#aaa]'
+                                }`}
+                            >
+                                {f.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Search Input */}
+                    <div className="relative w-full md:w-80">
+                        <input
+                            type="text"
+                            placeholder="SEARCH CATALOG..."
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            className="w-full bg-white border border-[#E8E6DF] rounded-full py-2.5 pl-5 pr-10 text-[10px] tracking-widest font-bold uppercase focus:outline-none focus:border-[#111] text-[#111] placeholder-[#aaa]"
+                        />
+                        <svg className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-[#888]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+
                 </div>
             </section>
 
             {/* ─── SHOES GRID ─── */}
-            <section className="py-24 px-8 relative z-10">
+            <section className="py-16 px-8 relative z-10">
                 <div className="max-w-7xl mx-auto">
                     {loading ? (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-12">
-                            {[1, 2, 3, 4].map(i => <div key={i} className="skeleton h-[500px] rounded" />)}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {[1, 2, 3, 4, 5, 6].map(i => (
+                                <div key={i} className="bg-white border border-[#E8E6DF] rounded-2xl h-[480px] animate-pulse" />
+                            ))}
+                        </div>
+                    ) : filteredShoes.length === 0 ? (
+                        <div className="text-center py-24 bg-[#F5F3EF] border border-[#E8E6DF] rounded-2xl">
+                            <div className="text-4xl mb-4">🔍</div>
+                            <span className="text-xs font-bold tracking-[0.2em] uppercase text-[#888]">No matching prototypes found</span>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 lg:gap-12">
-                            {shoes.map((shoe, i) => (
-                                <Link
-                                    key={shoe.id}
-                                    href={`/configure/${shoe.id}`}
-                                    className={`group relative flex flex-col border overflow-hidden transition-all duration-500 hover:shadow-[0_40px_100px_-20px_rgba(232,93,38,0.3)] ${cardBg} border-opacity-10`}
-                                    style={{ 
-                                        animationDelay: `${i * 100}ms`,
-                                        transform: hoveredId === shoe.id ? `perspective(1000px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg) translateY(-10px)` : 'none',
-                                        transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)'
-                                    }}
-                                    onMouseEnter={() => setHoveredId(shoe.id)}
-                                    onMouseMove={(e) => handleMouseMove(e, shoe.id)}
-                                    onMouseLeave={() => { setHoveredId(null); setTilt({ x: 0, y: 0 }); }}
-                                >
-                                    {/* Visual Preview Area */}
-                                    <ShoeCardPreview shoe={shoe} i={i} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+                            {filteredShoes.map((shoe, i) => {
+                                const isHovered = hoveredId === shoe.id;
+                                
+                                return (
+                                    <div
+                                        key={shoe.id}
+                                        onMouseEnter={() => setHoveredId(shoe.id)}
+                                        onMouseLeave={() => setHoveredId(null)}
+                                        className="group bg-white border border-[#E8E6DF] rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] hover:-translate-y-1"
+                                    >
+                                        {/* Visual Preview Area */}
+                                        <ShoeCardPreview shoe={shoe} isHovered={isHovered} />
 
-                                    {/* Content Area */}
-                                    <div className="p-8 flex-1 flex flex-col justify-between relative bg-[#0D0D0D] border-t border-white/5">
-                                        <div className="flex justify-between items-start mb-8">
-                                            <div>
-                                                <div className="text-[9px] tracking-[0.4em] text-[#E85D26] mb-2 font-bold uppercase opacity-60">Prototype // {shoe.slug}</div>
-                                                <h3 className="text-2xl font-black tracking-tighter text-white">
-                                                    {shoe.name.toUpperCase()}
-                                                </h3>
-                                            </div>
-                                            <div className="text-right">
-                                                <div className="text-2xl font-black text-[#E85D26]">
-                                                    ${parseFloat(shoe.base_price).toFixed(0)}
+                                        {/* Content details Area */}
+                                        <div className="p-7 flex flex-col justify-between flex-1 gap-6">
+                                            
+                                            {/* Shoe Title & Price */}
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <span className="text-[9px] tracking-[0.3em] text-[#888] block mb-1.5 uppercase font-bold">
+                                                        PROTOTYPE // {shoe.slug.substring(0, 16)}
+                                                    </span>
+                                                    <h3 className="text-lg font-black tracking-tight text-[#111] uppercase leading-snug">
+                                                        {shoe.name}
+                                                    </h3>
+                                                </div>
+                                                <div className="text-right">
+                                                    <span className="text-xl font-black text-[#111] font-mono leading-none block">
+                                                        ${parseFloat(shoe.base_price).toFixed(0)}
+                                                    </span>
+                                                    <span className="text-[7px] tracking-widest text-[#888] uppercase block mt-0.5">
+                                                        USD
+                                                    </span>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div className="relative group/btn overflow-hidden">
-                                            <div className="absolute inset-0 bg-[#E85D26] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out" />
-                                            <div className="relative z-10 py-4 border border-white/10 text-center text-[9px] tracking-[0.5em] uppercase font-bold transition-all duration-500 group-hover/btn:text-white group-hover/btn:tracking-[0.7em] text-white">
-                                                Configure Now
+                                            {/* Dynamic material tags */}
+                                            <div className="flex flex-wrap gap-1.5 border-t border-[#E8E6DF] pt-4">
+                                                {shoe.available_materials && (typeof shoe.available_materials === 'string' ? JSON.parse(shoe.available_materials) : shoe.available_materials).map(m => (
+                                                    <span key={m.id} className="px-2.5 py-1 bg-[#F5F3EF] border border-[#E8E6DF] text-[8px] tracking-wider uppercase font-bold text-[#666] rounded">
+                                                        {m.label}
+                                                    </span>
+                                                ))}
                                             </div>
+
+                                            {/* CTA Button */}
+                                            <Link
+                                                href={`/configure/${shoe.id}`}
+                                                className={`w-full py-3.5 text-center text-[9px] tracking-[0.25em] uppercase font-black rounded-full transition-all border flex items-center justify-center gap-2 ${
+                                                    isHovered 
+                                                        ? 'bg-black text-white border-black shadow-sm' 
+                                                        : 'bg-white border-[#E8E6DF] text-[#111] hover:border-[#111]'
+                                                }`}
+                                            >
+                                                Configure Now
+                                                <svg className={`w-3.5 h-3.5 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </Link>
                                         </div>
                                     </div>
-                                </Link>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>
