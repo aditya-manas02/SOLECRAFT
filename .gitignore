@@ -3,6 +3,7 @@
 .env
 .env.backup
 .env.production
+.env.local
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -22,3 +23,11 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Next.js Build Output
+.next/
+out/
+
+# SQLite database
+solecraft.db
+solecraft.db-journal
