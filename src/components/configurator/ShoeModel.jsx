@@ -29,10 +29,26 @@ function computeVisibleBox(scene) {
 }
 
 export function ShoeModel({ modelPath }) {
-  const { scene } = useGLTF(modelPath)
+  const primaryGLTF = useGLTF(modelPath)
+  const dracoGLTF = useGLTF('/models/shoes/shoe-draco.glb')
+  
   const { colorZones, selectedMaterial, accessories } = useConfiguratorStore()
   const materialsRef = useRef({})
   const assignedMaterials = useRef({}) // Maps original material UUIDs for SkinnedMeshes
+
+  const scene = primaryGLTF?.scene;
+
+  // Determine if the primary shoe model is fully paintable/split
+  // If it has <= 2 meshes, it's a merged single-mesh model which cannot be configured separately.
+  let meshCount = 0;
+  if (scene) {
+    scene.traverse((child) => {
+      if (child.isMesh && child.visible) {
+        meshCount++;
+      }
+    });
+  }
+  const isMergedModel = meshCount <= 2;
 
   // Robust mathematical normalization: calculate scale and offset to perfectly center ANY model
   const { scale, offset } = useMemo(() => {
@@ -57,11 +73,9 @@ export function ShoeModel({ modelPath }) {
     const size = box.getSize(new THREE.Vector3())
     const center = box.getCenter(new THREE.Vector3())
     
-    // If empty (e.g. all invisible), fallback
     if (size.length() === 0) return { scale: 1.5, offset: [0, 0, 0] }
 
     const maxDim = Math.max(size.x, size.y, size.z)
-    // Make the shoe roughly 2.2 units in its largest dimension
     const optimalScale = maxDim > 0 ? 2.2 / maxDim : 1.5
 
     return {
@@ -74,17 +88,18 @@ export function ShoeModel({ modelPath }) {
     }
   }, [scene])
 
+  const zoneKeys = ['Toe', 'Sole', 'Tongue', 'Heel', 'Laces']
+
   useEffect(() => {
-    if (!scene) return
+    if (!scene || isMergedModel) return
     const matProps = MATERIAL_PROPS[selectedMaterial] || MATERIAL_PROPS.leather
 
-    let sequentialIndex = 0;
-    const zoneKeys = Object.keys(colorZones);
+    let sequentialIndex = 0
 
     // Compute overall bounds for spatial heuristic mapping, ignoring the hidden environment
-    const sceneBox = computeVisibleBox(scene);
-    const sceneSize = sceneBox.getSize(new THREE.Vector3());
-    const lengthAxis = sceneSize.z > sceneSize.x ? 'z' : 'x';
+    const sceneBox = computeVisibleBox(scene)
+    const sceneSize = sceneBox.getSize(new THREE.Vector3())
+    const lengthAxis = sceneSize.z > sceneSize.x ? 'z' : 'x'
 
     scene.traverse((child) => {
       if (!child.isMesh || !child.visible) return
@@ -195,7 +210,7 @@ export function ShoeModel({ modelPath }) {
         mat.needsUpdate = true;
         
         return mat;
-      };
+      }
 
       if (Array.isArray(child.material)) {
         child.material = child.material.map((m, i) => applyColorToMaterial(m, i));
@@ -206,13 +221,57 @@ export function ShoeModel({ modelPath }) {
       child.castShadow = true
       child.receiveShadow = true
     })
-  }, [colorZones, selectedMaterial, accessories, scene])
+  }, [colorZones, selectedMaterial, accessories, scene, isMergedModel])
 
+  // ─── DYNAMIC SWAP FALLBACK FOR MERGED MODELS ───
+  // If the model is not split into customizable parts, render the high-fidelity split Draco model
+  // to guarantee the user is able to customize Laces, Sole, Tongue, Upper, Heel separately!
+  if (isMergedModel && dracoGLTF) {
+    const { nodes } = dracoGLTF;
+    const matProps = MATERIAL_PROPS[selectedMaterial] || MATERIAL_PROPS.leather;
+    
+    const soleColor   = colorZones.Sole   || '#1A1A2E';
+    const upperColor  = colorZones.Toe    || '#F0F0F0';
+    const tongueColor = colorZones.Tongue || '#5233C8';
+    const heelColor   = colorZones.Heel   || '#E85D26';
+    const lacesColor  = colorZones.Laces  || '#D8D0B8';
+
+    return (
+      <group position={[0, -0.465, 0]}>
+        <group rotation={[0, Math.PI / 6, 0]} scale={[1.4, 1.4, 1.4]} position={[0, 0.45, 0]}>
+          <mesh geometry={nodes.shoe.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={lacesColor} roughness={0.8} metalness={0.1} />
+          </mesh>
+          <mesh geometry={nodes.shoe_1.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={upperColor} roughness={matProps.roughness} metalness={matProps.metalness} envMapIntensity={matProps.envMapIntensity} />
+          </mesh>
+          <mesh geometry={nodes.shoe_2.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={upperColor} roughness={matProps.roughness} metalness={matProps.metalness} envMapIntensity={matProps.envMapIntensity} />
+          </mesh>
+          <mesh geometry={nodes.shoe_3.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={tongueColor} roughness={matProps.roughness} metalness={matProps.metalness} envMapIntensity={matProps.envMapIntensity} />
+          </mesh>
+          <mesh geometry={nodes.shoe_4.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={soleColor} roughness={0.8} metalness={0.1} />
+          </mesh>
+          <mesh geometry={nodes.shoe_5.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={heelColor} roughness={matProps.roughness} metalness={matProps.metalness} envMapIntensity={matProps.envMapIntensity} />
+          </mesh>
+          <mesh geometry={nodes.shoe_6.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={tongueColor} roughness={matProps.roughness} metalness={matProps.metalness} envMapIntensity={matProps.envMapIntensity} />
+          </mesh>
+          <mesh geometry={nodes.shoe_7.geometry} castShadow receiveShadow>
+            <meshStandardMaterial color={heelColor} roughness={matProps.roughness} metalness={matProps.metalness} envMapIntensity={matProps.envMapIntensity} />
+          </mesh>
+        </group>
+      </group>
+    );
+  }
+
+  // Render primary split model
   return (
     <group position={[0, -0.465, 0]}>
-      {/* Outer group handles the rotation around the newly established true center */}
       <group rotation={[0, Math.PI / 6, 0]}>
-        {/* Inner group handles the exact offset needed to bring the model to 0,0,0 */}
         <group position={offset}>
           <primitive object={scene} scale={scale} />
         </group>
@@ -221,5 +280,4 @@ export function ShoeModel({ modelPath }) {
   )
 }
 
-// Preload for performance
-ShoeModel.preload = (path) => useGLTF.preload(path)
+useGLTF.preload('/models/shoes/shoe-draco.glb')
